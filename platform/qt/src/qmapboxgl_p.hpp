@@ -47,6 +47,9 @@ public:
     QOpenGLFramebufferObject *fbo { nullptr };
 #endif
 
+private:
+    mbgl::gl::ProcAddress initializeExtension(const char*) override;
+
 public slots:
     void connectionEstablished();
 

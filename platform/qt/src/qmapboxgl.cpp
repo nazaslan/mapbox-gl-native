@@ -1582,6 +1582,20 @@ QMapboxGLPrivate::~QMapboxGLPrivate()
 {
 }
 
+/*!
+    Initializes an OpenGL extension function such as Vertex Array Objects (VAOs),
+    required by Mapbox GL Native engine.
+*/
+mbgl::gl::ProcAddress QMapboxGLPrivate::initializeExtension(const char* name) {
+#if QT_VERSION >= 0x050000
+    QOpenGLContext* thisContext = QOpenGLContext::currentContext();
+    return thisContext->getProcAddress(name);
+#else
+    const QGLContext* thisContext = QGLContext::currentContext();
+    return thisContext->getProcAddress(name);
+#endif
+}
+
 #if QT_VERSION >= 0x050000
 void QMapboxGLPrivate::bind() {
     if (fbo) {
