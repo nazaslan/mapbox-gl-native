@@ -28,6 +28,8 @@ MGL_EXPORT
 
 #pragma mark - Accessing the Paint Attributes
 
+- (void)setTransition:(MGLTransition)transition forKey:(NSString *)key;
+
 #if TARGET_OS_IPHONE
 /**
  The color with which the background will be drawn.

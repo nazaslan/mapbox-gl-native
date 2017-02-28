@@ -54,6 +54,8 @@ MGL_EXPORT
 
 #pragma mark - Accessing the Paint Attributes
 
+- (void)setTransition:(MGLTransition)transition forKey:(NSString *)key;
+
 /**
  Whether or not the fill should be antialiased.
  

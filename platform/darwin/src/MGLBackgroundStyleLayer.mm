@@ -8,6 +8,8 @@
 #import "MGLStyleValue_Private.h"
 #import "MGLBackgroundStyleLayer.h"
 
+#import "NSDate+MGLAdditions.h"
+
 #include <mbgl/map/map.hpp>
 #include <mbgl/style/layers/background_layer.hpp>
 
@@ -84,11 +86,43 @@
 
 #pragma mark - Accessing the Paint Attributes
 
+- (void)setTransition:(MGLTransition)transition forKey:(NSString *)key
+{
+    NSString *camelCaseKey;
+    if ([key length] > 1) {
+        camelCaseKey = [NSString stringWithFormat:@"%@%@",[[key substringToIndex:1] uppercaseString],[key substringFromIndex:1]];
+    } else {
+        camelCaseKey = [key uppercaseString];
+    }
+    NSString *setPropertyTransitionString = [NSString stringWithFormat:@"mbx_set%@Transition:", camelCaseKey];
+    SEL setPropertyTransitionSelector = NSSelectorFromString(setPropertyTransitionString);
+
+    if ([self respondsToSelector:setPropertyTransitionSelector]) {
+        NSInvocation *setPropertyInvocation = [NSInvocation
+                                                invocationWithMethodSignature:
+                                                [MGLBackgroundStyleLayer instanceMethodSignatureForSelector:setPropertyTransitionSelector]];
+
+        [setPropertyInvocation setSelector:setPropertyTransitionSelector];
+        [setPropertyInvocation setTarget:self];
+
+        [setPropertyInvocation setArgument:&transition atIndex:2];
+
+        [setPropertyInvocation performSelector:@selector(invoke)];
+    }
+}
+
 - (void)setBackgroundColor:(MGLStyleValue<MGLColor *> *)backgroundColor {
     MGLAssertStyleLayerIsValid();
 
     auto mbglValue = MGLStyleValueTransformer<mbgl::Color, MGLColor *>().toInterpolatablePropertyValue(backgroundColor);
     self.rawLayer->setBackgroundColor(mbglValue);
+}
+
+- (void)mbx_setBackgroundColorTransition:(MGLTransition)transition {
+    MGLAssertStyleLayerIsValid();
+
+    mbgl::style::TransitionOptions options { { MGLDurationInSecondsFromTimeInterval(transition.duration) }, { MGLDurationInSecondsFromTimeInterval(transition.delay) } };
+    self.rawLayer->setBackgroundColorTransition(options);
 }
 
 - (MGLStyleValue<MGLColor *> *)backgroundColor {
@@ -108,6 +142,13 @@
     self.rawLayer->setBackgroundOpacity(mbglValue);
 }
 
+- (void)mbx_setBackgroundOpacityTransition:(MGLTransition)transition {
+    MGLAssertStyleLayerIsValid();
+
+    mbgl::style::TransitionOptions options { { MGLDurationInSecondsFromTimeInterval(transition.duration) }, { MGLDurationInSecondsFromTimeInterval(transition.delay) } };
+    self.rawLayer->setBackgroundOpacityTransition(options);
+}
+
 - (MGLStyleValue<NSNumber *> *)backgroundOpacity {
     MGLAssertStyleLayerIsValid();
 
@@ -123,6 +164,13 @@
 
     auto mbglValue = MGLStyleValueTransformer<std::string, NSString *>().toPropertyValue(backgroundPattern);
     self.rawLayer->setBackgroundPattern(mbglValue);
+}
+
+- (void)mbx_setBackgroundPatternTransition:(MGLTransition)transition {
+    MGLAssertStyleLayerIsValid();
+
+    mbgl::style::TransitionOptions options { { MGLDurationInSecondsFromTimeInterval(transition.duration) }, { MGLDurationInSecondsFromTimeInterval(transition.delay) } };
+    self.rawLayer->setBackgroundPatternTransition(options);
 }
 
 - (MGLStyleValue<NSString *> *)backgroundPattern {

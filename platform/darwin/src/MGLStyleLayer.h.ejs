@@ -105,6 +105,8 @@ MGL_EXPORT
 <% if (paintProperties.length) { -%>
 #pragma mark - Accessing the Paint Attributes
 
+- (void)setTransition:(MGLTransition)transition forKey:(NSString *)key;
+
 <% for (const property of paintProperties) { -%>
 /**
 <%- propertyDoc(property.name, property, type, 'paint').wrap(80, 1) %>

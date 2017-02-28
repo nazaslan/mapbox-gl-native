@@ -81,6 +81,8 @@ MGL_EXPORT
 
 #pragma mark - Accessing the Paint Attributes
 
+- (void)setTransition:(MGLTransition)transition forKey:(NSString *)key;
+
 /**
  Amount to blur the circle. 1 blurs the circle such that only the centerpoint is
  full opacity.

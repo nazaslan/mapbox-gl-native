@@ -181,6 +181,8 @@ MGL_EXPORT
 
 #pragma mark - Accessing the Paint Attributes
 
+- (void)setTransition:(MGLTransition)transition forKey:(NSString *)key;
+
 /**
  Blur applied to the line, in points.
  

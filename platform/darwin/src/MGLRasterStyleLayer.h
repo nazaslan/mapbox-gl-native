@@ -38,6 +38,8 @@ MGL_EXPORT
 
 #pragma mark - Accessing the Paint Attributes
 
+- (void)setTransition:(MGLTransition)transition forKey:(NSString *)key;
+
 /**
  Increase or reduce the brightness of the image. The value is the maximum
  brightness.
